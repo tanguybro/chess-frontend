@@ -1,25 +1,21 @@
-import logo from './logo.svg';
+import { useState } from 'react';
 import './App.css';
+import Chessboard from './Chessboard';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    const [board, setBoard] = useState([]);
+
+    return (
+        <div className="center">
+            <h1>Chess</h1>
+            <button onClick={() => setBoard(getStartBoard())}>Nouvelle partie</button>
+            <Chessboard className="center" board={board}></Chessboard>
+        </div>
+    );
+}
+
+function getStartBoard() {
+    return [['e4, e5, Cf3'], ['g5, f6, Kg4']];
 }
 
 export default App;
