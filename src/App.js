@@ -1,4 +1,6 @@
+import axios from 'axios';
 import { useState } from 'react';
+import { Button } from 'react-bootstrap';
 import './App.css';
 import Chessboard from './Chessboard';
 
@@ -7,15 +9,14 @@ function App() {
 
     return (
         <div className="center">
-            <h1>Chess</h1>
-            <button onClick={() => setBoard(getStartBoard())}>Nouvelle partie</button>
+            <Button onClick={async () => setBoard(await getStartBoard())}>Nouvelle partie</Button>
             <Chessboard className="center" board={board}></Chessboard>
         </div>
     );
 }
 
-function getStartBoard() {
-    return [['e4, e5, Cf3'], ['g5, f6, Kg4']];
+async function getStartBoard() {
+    return await axios.get('http://localhost/board').data;
 }
 
 export default App;
