@@ -1,22 +1,25 @@
 import axios from 'axios';
-import { useState } from 'react';
-import { Button } from 'react-bootstrap';
+import { useEffect, useState } from 'react';
 import './App.css';
 import Chessboard from './Chessboard';
 
-function App() {
+const App = () => {
     const [board, setBoard] = useState([]);
+
+    useEffect(() => {
+        axios.post('http://localhost/board/new-game').then(() => {
+            axios.get('http://localhost/board').then((response) => {
+                setBoard(response.data);
+            });
+        });
+    }, []);
 
     return (
         <div className="center">
-            <Button onClick={async () => setBoard(await getStartBoard())}>Nouvelle partie</Button>
+            {/* <Button onClick={async () => setBoard(await getStartBoard())}>Nouvelle partie</Button> */}
             <Chessboard className="center" board={board}></Chessboard>
         </div>
     );
-}
-
-async function getStartBoard() {
-    return await axios.get('http://localhost/board').data;
-}
+};
 
 export default App;
