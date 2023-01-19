@@ -1,21 +1,24 @@
 import { useDrop } from 'react-dnd';
 
 export default function Square({ color, position, move, children }) {
-    const [{ isOver, piece }, drop] = useDrop(
+    const [{ isOver }, drop] = useDrop(
         () => ({
             accept: 'piece',
-            drop: () => {
+            drop: (item) => {
+                let piece = '';
+                if (item.piece != 'p') {
+                    piece = item.piece.toUpperCase();
+                }
+
                 move(piece, position);
             },
+            //canDrop: () => canMoveTo(position),
             collect: (monitor) => ({
-                piece: monitor.getItem(),
                 isOver: !!monitor.isOver(),
             }),
         }),
         [position]
     );
-
-    console.log(piece);
 
     return (
         <div
@@ -30,3 +33,9 @@ export default function Square({ color, position, move, children }) {
         </div>
     );
 }
+
+// async function canMoveTo(allowedMoves, position) {
+//     const moves = await allowedMoves(position);
+
+//     return moves.includes(position);
+// }

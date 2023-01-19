@@ -20,13 +20,16 @@ const pieces_codes = {
 };
 
 export default function Piece({ piece, color }) {
-    const [{ isDragging }, drag] = useDrag(() => ({
-        type: 'piece',
-        item: piece,
-        collect: (monitor) => ({
-            isDragging: !!monitor.isDragging(),
+    const [{ isDragging }, drag] = useDrag(
+        () => ({
+            type: 'piece',
+            item: { piece },
+            collect: (monitor) => ({
+                isDragging: !!monitor.isDragging(),
+            }),
         }),
-    }));
+        [piece]
+    );
 
     return (
         <div

@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React from 'react';
+import { firstValueFrom } from 'rxjs';
 import './App.css';
 import Chessboard from './Chessboard';
 
@@ -20,7 +21,6 @@ export default class App extends React.Component {
     render() {
         return (
             <div className="center">
-                {/* <Button onClick={async () => setBoard(await getStartBoard())}>Nouvelle partie</Button> */}
                 <Chessboard
                     className="center"
                     board={this.state.board}
@@ -31,7 +31,6 @@ export default class App extends React.Component {
     }
 
     updateBoard() {
-        console.log('Refresh board');
         axios.get(API_URL + '/board').then((response) => {
             this.setState({
                 board: response.data,
@@ -46,7 +45,7 @@ export default class App extends React.Component {
     }
 
     move(piece, to) {
-        console.log(piece + to);
+        console.log('move : ' + piece + to);
         axios
             .post(API_URL + '/board/move', { move: piece + to })
             .then(() => {
@@ -55,5 +54,12 @@ export default class App extends React.Component {
             .catch((error) => {
                 console.log(error);
             });
+    }
+
+    async allowedMoves(position) {
+        const { data } = await firstValueFrom(this.httpService.get(API_URL + '/board/can-move?position=' + position));
+        console.log(data);
+
+        return data;
     }
 }
