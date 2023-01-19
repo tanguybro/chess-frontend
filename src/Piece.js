@@ -1,4 +1,4 @@
-import './Piece.css';
+import { useDrag } from 'react-dnd';
 
 const pieces_codes = {
     w: {
@@ -19,6 +19,24 @@ const pieces_codes = {
     },
 };
 
-export default function Piece({ type, color }) {
-    return <div dangerouslySetInnerHTML={pieces_codes[color][type]} className="piece"></div>;
+export default function Piece({ piece, color }) {
+    const [{ isDragging }, drag] = useDrag(() => ({
+        type: 'piece',
+        item: piece,
+        collect: (monitor) => ({
+            isDragging: !!monitor.isDragging(),
+        }),
+    }));
+
+    return (
+        <div
+            dangerouslySetInnerHTML={pieces_codes[color][piece]}
+            ref={drag}
+            style={{
+                opacity: isDragging ? 0 : 1,
+                cursor: 'grab',
+                backgroundColor: '',
+            }}
+        ></div>
+    );
 }

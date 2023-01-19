@@ -21,12 +21,17 @@ export default class App extends React.Component {
         return (
             <div className="center">
                 {/* <Button onClick={async () => setBoard(await getStartBoard())}>Nouvelle partie</Button> */}
-                <Chessboard className="center" board={this.state.board} onClick={(square) => this.move(square)}></Chessboard>
+                <Chessboard
+                    className="center"
+                    board={this.state.board}
+                    move={(piece, to) => this.move(piece, to)}
+                ></Chessboard>
             </div>
         );
     }
 
     updateBoard() {
+        console.log('Refresh board');
         axios.get(API_URL + '/board').then((response) => {
             this.setState({
                 board: response.data,
@@ -40,10 +45,10 @@ export default class App extends React.Component {
         });
     }
 
-    move(to) {
-        console.log(to);
+    move(piece, to) {
+        console.log(piece + to);
         axios
-            .post(API_URL + '/board/move', { move: to })
+            .post(API_URL + '/board/move', { move: piece + to })
             .then(() => {
                 this.updateBoard();
             })
