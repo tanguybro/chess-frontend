@@ -1,25 +1,54 @@
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import React from 'react';
 import './App.css';
 import Chessboard from './Chessboard';
 
-const App = () => {
-    const [board, setBoard] = useState([]);
+const API_URL = process.env.REACT_APP_API_URL;
 
-    useEffect(() => {
-        axios.post('http://localhost/board/new-game').then(() => {
-            axios.get('http://localhost/board').then((response) => {
-                setBoard(response.data);
+export default class App extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            board: [],
+        };
+    }
+
+    componentDidMount() {
+        this.init();
+    }
+
+    render() {
+        return (
+            <div className="center">
+                {/* <Button onClick={async () => setBoard(await getStartBoard())}>Nouvelle partie</Button> */}
+                <Chessboard className="center" board={this.state.board} onClick={(square) => this.move(square)}></Chessboard>
+            </div>
+        );
+    }
+
+    updateBoard() {
+        axios.get(API_URL + '/board').then((response) => {
+            this.setState({
+                board: response.data,
             });
         });
-    }, []);
+    }
 
-    return (
-        <div className="center">
-            {/* <Button onClick={async () => setBoard(await getStartBoard())}>Nouvelle partie</Button> */}
-            <Chessboard className="center" board={board}></Chessboard>
-        </div>
-    );
-};
+    init() {
+        axios.post(API_URL + '/board/new-game').then(() => {
+            this.updateBoard();
+        });
+    }
 
-export default App;
+    move(to) {
+        console.log(to);
+        axios
+            .post(API_URL + '/board/move', { move: to })
+            .then(() => {
+                this.updateBoard();
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
+}
