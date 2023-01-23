@@ -16,13 +16,7 @@ function renderBoard(board, move) {
     return [...Array(8)].map((x, i) => (
         <div className="board-row" key={i}>
             {[...Array(8)].map((x, j) =>
-                renderSquare(
-                    board[i][j]?.square,
-                    board[i][j]?.type,
-                    board[i][j]?.color,
-                    ((i + j) * 3) % 2 == 0 ? 'white' : 'black',
-                    move
-                )
+                renderSquare(board[i][j]?.square, board[i][j]?.type, board[i][j]?.color, ((i + j) * 3) % 2 == 0 ? 'white' : 'black', move)
             )}
         </div>
     ));
@@ -31,7 +25,7 @@ function renderBoard(board, move) {
 function renderSquare(square, type, color, squareColor, move) {
     return (
         <Square key={square} color={squareColor} position={square} move={move}>
-            {type != null ? <Piece piece={type} color={color} /> : ''}
+            {type != null ? <Piece piece={type} color={color} position={square} /> : ''}
         </Square>
     );
 }

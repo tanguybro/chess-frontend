@@ -19,16 +19,16 @@ const pieces_codes = {
     },
 };
 
-export default function Piece({ piece, color }) {
+export default function Piece({ piece, color, position }) {
     const [{ isDragging }, drag] = useDrag(
         () => ({
             type: 'piece',
-            item: { piece },
+            item: { position },
             collect: (monitor) => ({
                 isDragging: !!monitor.isDragging(),
             }),
         }),
-        [piece]
+        [position]
     );
 
     return (
